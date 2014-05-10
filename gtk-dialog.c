@@ -2620,15 +2620,11 @@ static void conversation_destroyed(PurpleConversation *conv, void *data)
     PidginConversation *gtkconv;
     PidginWindow *win;
     GHashTable * conv_or_ctx_map;
-    GHashTable * conv_to_idx_map;
 
     if (menu) gtk_object_destroy(GTK_OBJECT(menu));
 
     conv_or_ctx_map = purple_conversation_get_data(conv, "otr-convorctx");
     g_hash_table_destroy(conv_or_ctx_map);
-
-    conv_to_idx_map = purple_conversation_get_data(conv, "otr-conv_to_idx");
-    g_hash_table_destroy(conv_to_idx_map);
 
     purple_conversation_set_data(conv, "otr-label", NULL);
     purple_conversation_set_data(conv, "otr-button", NULL);
@@ -2640,7 +2636,6 @@ static void conversation_destroyed(PurpleConversation *conv, void *data)
     purple_conversation_set_data(conv, "otr-select_best", NULL);
     purple_conversation_set_data(conv, "otr-select_recent", NULL);
     purple_conversation_set_data(conv, "otr-convorctx", NULL);
-    purple_conversation_set_data(conv, "otr-conv_to_idx", NULL);
 
     otrg_conversation_cleanup_vars(conv);
 
@@ -2678,7 +2673,6 @@ static void otrg_gtk_dialog_new_purple_conv(PurpleConversation *conv)
     const char *name;
 
     GHashTable * conv_or_ctx_map;
-    GHashTable * ctx_to_idx_map;
 
     gboolean show_otr_button;
 
@@ -2727,10 +2721,6 @@ static void otrg_gtk_dialog_new_purple_conv(PurpleConversation *conv)
     conv_or_ctx_map = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
 	    free);
     purple_conversation_set_data(conv, "otr-convorctx", conv_or_ctx_map);
-
-    ctx_to_idx_map = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL,
-	    g_free);
-    purple_conversation_set_data(conv, "otr-conv_to_idx", ctx_to_idx_map);
 
     otrg_conversation_init_vars(conv);
 
