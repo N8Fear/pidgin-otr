@@ -1439,7 +1439,6 @@ static void otrg_gtk_dialog_connected(ConnContext *context)
     char *buf;
     char *format_buf;
     TrustLevel level;
-    gboolean is_multi_inst;
 
     conv = otrg_plugin_context_to_conv(context, TRUE);
     level = otrg_plugin_context_to_trust(context);
@@ -1479,14 +1478,9 @@ static void otrg_gtk_dialog_connected(ConnContext *context)
 
     dialog_update_label(context);
 
-    is_multi_inst = otrg_conversation_is_multi_instance(conv);
-
-    if (is_multi_inst) {
-	gboolean * have_warned_instances = (gboolean *)
-		purple_conversation_get_data(conv, "otr-warned_instances");
-
-	if (!*have_warned_instances) {
-	    *have_warned_instances = TRUE;
+    if (otrg_conversation_is_multi_instance(conv)) {
+	if (!otrg_conversation_have_warned_instances(conv)) {
+	    otrg_conversation_set_warned_instances(conv, TRUE);
 	    buf = g_strdup_printf(_("Your buddy is logged in multiple times and"
 		    " OTR has established <a href=\"%s%s\">multiple sessions"
 		    "</a>. Use the icon menu above if you wish to select the "
@@ -2651,7 +2645,6 @@ static void conversation_destroyed(PurpleConversation *conv, void *data)
     GHashTable * conv_or_ctx_map;
     GHashTable * conv_to_idx_map;
     gint * max_instance_idx;
-    gboolean * have_warned_instances;
 
     if (menu) gtk_object_destroy(GTK_OBJECT(menu));
 
@@ -2666,12 +2659,6 @@ static void conversation_destroyed(PurpleConversation *conv, void *data)
 	g_free(max_instance_idx);
     }
 
-    have_warned_instances = purple_conversation_get_data(conv,
-	    "otr-warned_instances");
-    if (have_warned_instances) {
-	g_free(have_warned_instances);
-    }
-
     purple_conversation_set_data(conv, "otr-label", NULL);
     purple_conversation_set_data(conv, "otr-button", NULL);
     purple_conversation_set_data(conv, "otr-icon", NULL);
@@ -2684,7 +2671,6 @@ static void conversation_destroyed(PurpleConversation *conv, void *data)
     purple_conversation_set_data(conv, "otr-convorctx", NULL);
     purple_conversation_set_data(conv, "otr-conv_to_idx", NULL);
     purple_conversation_set_data(conv, "otr-max_idx", NULL);
-    purple_conversation_set_data(conv, "otr-warned_instances", NULL);
 
     otrg_conversation_cleanup_vars(conv);
 
@@ -2725,7 +2711,6 @@ static void otrg_gtk_dialog_new_purple_conv(PurpleConversation *conv)
     GHashTable * ctx_to_idx_map;
 
     gint * max_instance_idx;
-    gboolean * have_warned_instances;
     gboolean show_otr_button;
 
     /* Do nothing if this isn't an IM conversation */
@@ -2782,11 +2767,6 @@ static void otrg_gtk_dialog_new_purple_conv(PurpleConversation *conv)
     *max_instance_idx = 0;
     purple_conversation_set_data(conv, "otr-max_idx",
 	    (gpointer)max_instance_idx);
-
-    have_warned_instances = g_malloc(sizeof(gboolean));
-    *have_warned_instances = FALSE;
-    purple_conversation_set_data(conv, "otr-warned_instances",
-	    (gpointer)have_warned_instances);
 
     otrg_conversation_init_vars(conv);
 
