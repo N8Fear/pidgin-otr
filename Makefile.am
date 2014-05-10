@@ -1,27 +1,28 @@
-AM_CFLAGS=	@LIBGCRYPT_CFLAGS@ @LIBOTR_CFLAGS@ @EXTRA_CFLAGS@
+AM_CFLAGS=	@LIBGCRYPT_CFLAGS@ @LIBOTR_CFLAGS@ @GLIB_CFLAGS@ @PURPLE_CFLAGS@
 AM_CFLAGS += \
-	-DUSING_GTK \
 	-DPURPLE_PLUGINS \
 	-DPIDGIN_OTR_VERSION=\"@VERSION@\" \
 	-DLOCALEDIR=\"$(datadir)/locale\"
 
 SUBDIRS=	po
 
-plugindir=		${libdir}/pidgin
+if FOR_LIBPURPLE3
+plugindir = ${libdir}/purple-3
+else
+# FOR_PIDGIN2
+plugindir = ${libdir}/pidgin
+endif
 
 plugin_LTLIBRARIES=	pidgin-otr.la
 
 pidgin_otr_la_SOURCES = \
 	common.c \
 	dialogs.c \
-	gtk-dialog.c \
-	gtk-ui.c \
 	otr-plugin.c \
-	tooltipmenu.c \
 	ui.c
 
 pidgin_otr_la_LDFLAGS=	-module -avoid-version
-pidgin_otr_la_LDFLAGS+=	@LIBGCRYPT_LIBS@ @LIBOTR_LIBS@
+pidgin_otr_la_LDFLAGS+=	@LIBGCRYPT_LIBS@ @LIBOTR_LIBS@ @PURPLE_LIBS@
 
 EXTRA_DIST = \
 	INSTALL.mingw \
@@ -47,13 +48,17 @@ DISTCLEANFILES = \
 	intltool-extract \
 	intltool-merge \
 	intltool-update
-#
-#
-# Don't include a filename or timestamp in the dist .tar.gz file, so that
-# we can create a reproducible tarball (coupled with setting am__tar in
-# configure.ac)
-override GZIP_ENV='--best --no-name'
 
-source_date_epoch: FORCE
-	git log --format=%ct -1 > source_date_epoch
-FORCE:
+if FOR_PIDGIN2
+pidgin_otr_la_SOURCES += \
+	gtk-dialog.c \
+	gtk-ui.c \
+	tooltipmenu.c
+AM_CFLAGS += -DUSING_GTK
+AM_CFLAGS += @GTK_CFLAGS@
+else
+EXTRA_DIST += \
+	gtk-dialog.c \
+	gtk-ui.c \
+	tooltipmenu.c
+endif
