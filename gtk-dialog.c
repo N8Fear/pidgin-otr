@@ -542,8 +542,8 @@ static void add_to_vbox_init_one_way_auth(GtkWidget *vbox,
 	gtk_box_pack_start(GTK_BOX(vbox), question_entry, FALSE, FALSE, 0);
     }
 
-    if (context->active_fingerprint->trust &&
-	context->active_fingerprint->trust[0] && !(smppair->responder)) {
+    if (otrg_fingerprint_is_trusted(context->active_fingerprint) &&
+	!smppair->responder) {
 	label2 = gtk_label_new(_("This buddy is already authenticated."));
     } else {
 	label2 = NULL;
@@ -623,8 +623,7 @@ static void add_to_vbox_init_two_way_auth(GtkWidget *vbox,
     gtk_entry_set_activates_default(GTK_ENTRY(entry), TRUE);
     auth_opt_data->two_way_entry = GTK_ENTRY(entry);
 
-    if (context->active_fingerprint->trust &&
-	context->active_fingerprint->trust[0]) {
+    if (otrg_fingerprint_is_trusted(context->active_fingerprint)) {
 	label2 = gtk_label_new(_("This buddy is already authenticated."));
     } else {
 	label2 = NULL;
@@ -1322,7 +1321,7 @@ static void vrfy_fingerprint_changed(GtkComboBox *combo, void *data)
 
     if (fprint == NULL) return;
 
-    oldtrust = (fprint->trust && fprint->trust[0]);
+    oldtrust = otrg_fingerprint_is_trusted(fprint);
     trust = gtk_combo_box_get_active(combo) == 1 ? 1 : 0;
 
     /* See if anything's changed */
@@ -1346,7 +1345,7 @@ static void add_vrfy_fingerprint(GtkWidget *vbox, void *data)
     char *labelt;
     int verified = 0;
 
-    if (vfd->fprint->trust && vfd->fprint->trust[0]) {
+    if (otrg_fingerprint_is_trusted(vfd->fprint)) {
 	verified = 1;
     }
 
@@ -1499,8 +1498,7 @@ static void otrg_gtk_dialog_update_smp(ConnContext *context,
 		GTK_RESPONSE_ACCEPT);
 
 	if (smp_event == OTRL_SMPEVENT_SUCCESS) {
-	    if (context->active_fingerprint->trust &&
-		    context->active_fingerprint->trust[0]) {
+	    if (otrg_fingerprint_is_trusted(context->active_fingerprint)) {
 		gtk_label_set_text(GTK_LABEL(smp_data->smp_progress_label),
 			_("Authentication successful."));
 	    } else {
