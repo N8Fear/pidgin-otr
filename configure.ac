@@ -8,10 +8,12 @@ AM_CONFIG_HEADER(config.h)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 AM_INIT_AUTOMAKE([-Wall -Werror])
+AM_SILENT_RULES([yes])
 
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 AC_PROG_CC
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 dnl Cause "make dist" to create a reproducible tarball (coupled with
 dnl setting GZIP_ENV in Makefile.am).  Note that this relies on the
