@@ -1789,6 +1789,14 @@ plugin_load(PurplePlugin *plugin, GError **error)
     return TRUE;
 }
 
+#define DISPLAY_VERSION "3.0.0_test"
+#define PLUGIN_SUMMARY  "Provides private and secure conversations"
+#define PLUGIN_DESC     "Preserves the privacy of IM communications "\
+			"by providing encryption, authentication, "\
+			"deniability, and perfect forward secrecy."
+#define PLUGIN_WEBSITE  "https://github.com/N8Fear/pidgin-otr"
+#define PLUGIN_CATEGORY "Security"
+
 static PurplePluginInfo *
 plugin_query(GError **error)
 {
@@ -1797,6 +1805,14 @@ plugin_query(GError **error)
     return purple_plugin_info_new(
 	    "id", "otr",
 	    "name", "Off-the-Record Messaging",
+	    "version",        DISPLAY_VERSION,
+	    "category",       PLUGIN_CATEGORY,
+	    "summary",        PLUGIN_SUMMARY,
+	    "description",    PLUGIN_DESC,
+	    "authors",        authors,
+	    "website",        PLUGIN_WEBSITE,
+	    "abi-version",    PURPLE_ABI_VERSION,
+	    "pref-frame-cb",  NULL,
 	    NULL
     );
 }
