@@ -191,7 +191,7 @@ void otrg_plugin_inject_message(PurpleAccount *account, const char *recipient,
     if (!connection) {
 	const char *protocol = purple_account_get_protocol_id(account);
 	const char *accountname = purple_account_get_username(account);
-	PurplePlugin *p = purple_find_prpl(protocol);
+// TODO	PurplePlugin *p = purple_find_prpl(protocol);
 	char *msg = g_strdup_printf(_("You are not currently connected to "
 		"account %s (%s)."), accountname,
 		"FixMe!");
@@ -202,7 +202,8 @@ void otrg_plugin_inject_message(PurpleAccount *account, const char *recipient,
 	return;
     }
 // ToDo:    purple_serv_send_im(connection, recipient, message, 0);
-    purple_serv_send_im(connection, message);
+    PurpleMessage * msg = purple_message_new_outgoing("ToDo:Fixme", message, PURPLE_MESSAGE_SEND);
+    purple_serv_send_im(connection, msg);
 }
 
 /* Display a notification message for a particular accountname /
@@ -544,7 +545,7 @@ static void inject_message_cb(void *opdata, const char *accountname,
 {
     PurpleAccount *account = purple_accounts_find(accountname, protocol);
     if (!account) {
-	PurplePlugin *p = purple_find_prpl(protocol);
+	// TODO: Fixme PurplePlugin *p = purple_find_prpl(protocol);
 	char *msg = g_strdup_printf(_("Unknown account %s (%s)."),
 		accountname,
 		"TODO:fixme!");
@@ -672,10 +673,11 @@ static int max_message_size_cb(void *opdata, ConnContext *context)
 
     if (conv != NULL)
 	max_size = purple_conversation_get_max_message_size(conv);
-    else {
-	max_size = purple_prpl_get_max_message_size(
-	    purple_find_prpl(context->protocol));
-    }
+    //TODO Fixme
+//    else {
+//          max_size = purple_protocol_get_max_message_size(
+//              purple_find_prpl(context->protocol));
+//      }
 
     return (max_size > 0) ? max_size : 0;
 #else
@@ -1754,7 +1756,7 @@ static PurplePluginInfo info = {};
 //	NULL                                              /* actions        */
 //};
 
-static void
+static gboolean
 plugin_load(PurplePlugin *plugin, GError **error)
 {
     /* Set up the UI ops */
@@ -1784,6 +1786,7 @@ plugin_load(PurplePlugin *plugin, GError **error)
 //    info.description = _("Preserves the privacy of IM communications "
 //			 "by providing encryption, authentication, "
 //			 "deniability, and perfect forward secrecy.");
+    return TRUE;
 }
 
 static PurplePluginInfo *
@@ -1805,6 +1808,6 @@ plugin_unload(PurplePlugin *plugin, GError ** error)
 }
 
 
-PURPLE_INIT_PLUGIN(otr, plugin_query, plugin_load, plugin_unload);
+PURPLE_PLUGIN_INIT(otr, plugin_query, plugin_load, plugin_unload);
 
 /* vim: set tabstop=8 softtabstop=4 shiftwidth=4 noexpandtab: */

@@ -42,7 +42,7 @@ otrg_verificator_register(OtrgFingerprintVerificator* verf)
 {
 	PurplePlugin *otrg;
 
-	otrg = purple_plugins_find_with_id("otr");
+	otrg = purple_plugins_find_plugin("otr");
 
 	if (otrg == NULL) {
 		purple_debug_error("otr", "OTR plugin is not present");
@@ -58,7 +58,7 @@ otrg_verificator_unregister(OtrgFingerprintVerificator* verf)
 {
 	PurplePlugin *otrg;
 
-	otrg = purple_plugins_find_with_id("otr");
+	otrg = purple_plugins_find_plugin("otr");
 
 	if (otrg == NULL) {
 		purple_debug_error("otr", "OTR plugin is not present");

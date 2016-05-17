@@ -109,7 +109,7 @@ void otrg_ui_connect_connection(ConnContext *context)
 
     account = purple_accounts_find(context->accountname, context->protocol);
     if (!account) {
-	PurplePlugin *p = purple_find_prpl(context->protocol);
+// Fixme	PurplePlugin *p = purple_find_prpl(context->protocol);
 	msg = g_strdup_printf(_("Account %s (%s) could not be found"),
 		context->accountname,
 		"FixMe!");

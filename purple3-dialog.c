@@ -92,7 +92,8 @@ otrg_purple3_account_full_name(const char *protocol, const char *account)
 	const gchar *protocol_print;
 	static gchar full_name[OTRG_STR_BUFF_SIZE];
 
-	p = purple_find_prpl(protocol);
+	// TODO: find out used protocol
+//	p = purple_protocols_find(protocol);
 //TODO 	protocol_print = (p ? p->info->name : _("Unknown"));
  	protocol_print = _("FixMe");
 
@@ -247,8 +248,9 @@ otrg_purple3_dialog_notify_message(PurpleNotifyMsgType type,
 static void
 otrg_purple3_otr_message(PurpleConversation *conv, const gchar *msg)
 {
-	purple_conversation_write(conv, NULL, msg, PURPLE_MESSAGE_SYSTEM,
-		time(NULL));
+//	purple_conversation_write(conv, NULL, msg, PURPLE_MESSAGE_SYSTEM,
+//		time(NULL));
+	purple_conversation_write_system_message(conv, msg, PURPLE_MESSAGE_SYSTEM);
 }
 
 /* similiar to GTK version */
