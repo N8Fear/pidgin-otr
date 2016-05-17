@@ -93,7 +93,8 @@ otrg_purple3_account_full_name(const char *protocol, const char *account)
 	static gchar full_name[OTRG_STR_BUFF_SIZE];
 
 	p = purple_find_prpl(protocol);
-	protocol_print = (p ? p->info->name : _("Unknown"));
+//TODO 	protocol_print = (p ? p->info->name : _("Unknown"));
+ 	protocol_print = _("FixMe");
 
 	g_snprintf(full_name, sizeof(full_name), "%s (%s)",
 		account, protocol_print);

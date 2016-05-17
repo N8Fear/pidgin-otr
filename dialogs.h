@@ -35,6 +35,13 @@
 #define SESSIONS_HELPURL      BASE_HELPURL "sessions.php"
 
 
+/*
+ * Substitution:
+ */
+
+typedef int PurpleNotifyMsgType;
+
+
 typedef gpointer OtrgDialogWaitHandle;
 
 typedef void (*OtrgDialogCancelCb)(gpointer user_data);

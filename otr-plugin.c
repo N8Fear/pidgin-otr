@@ -29,6 +29,8 @@
 #include <string.h>
 #include <assert.h>
 
+#include <glib.h>
+
 /* libgcrypt headers */
 #include <gcrypt.h>
 
@@ -192,13 +194,15 @@ void otrg_plugin_inject_message(PurpleAccount *account, const char *recipient,
 	PurplePlugin *p = purple_find_prpl(protocol);
 	char *msg = g_strdup_printf(_("You are not currently connected to "
 		"account %s (%s)."), accountname,
-		(p && p->info->name) ? p->info->name : _("Unknown"));
+		"FixMe!");
+// TODO		(p && p->info->name) ? p->info->name : _("Unknown"));
 	otrg_dialog_notify_error(accountname, protocol, recipient,
 		_("Not connected"), msg, NULL);
 	g_free(msg);
 	return;
     }
-    purple_serv_send_im(connection, recipient, message, 0);
+// ToDo:    purple_serv_send_im(connection, recipient, message, 0);
+    purple_serv_send_im(connection, message);
 }
 
 /* Display a notification message for a particular accountname /
@@ -543,7 +547,8 @@ static void inject_message_cb(void *opdata, const char *accountname,
 	PurplePlugin *p = purple_find_prpl(protocol);
 	char *msg = g_strdup_printf(_("Unknown account %s (%s)."),
 		accountname,
-		(p && p->info->name) ? p->info->name : _("Unknown"));
+		"TODO:fixme!");
+		//(p && p->info->name) ? p->info->name : _("Unknown"));
 	otrg_dialog_notify_error(accountname, protocol, recipient,
 		_("Unknown account"), msg, NULL);
 	g_free(msg);
@@ -1686,11 +1691,11 @@ int otrg_plugin_proto_supports_otr(const char *proto)
 
 #if PURPLE_VERSION_CHECK(3,0,0)
 
-static PurplePluginUiInfo prefs_info =
-{
-    NULL,
-    otrg_purple3_ui_prefs
-};
+//static PurplePluginUiInfo prefs_info =
+//{
+//    NULL,
+//    otrg_purple3_ui_prefs
+//};
 
 #define UI_INFO NULL
 #define PLUGIN_TYPE NULL
@@ -1715,42 +1720,42 @@ static PidginPluginUiInfo ui_info =
 
 #endif
 
-static PurplePluginInfo info =
-{
-	PURPLE_PLUGIN_MAGIC,
-
-	/* Use the correct API */
-	PURPLE_MAJOR_VERSION,                             /* major version  */
-	0,                                                /* minor version  */
-
-	PURPLE_PLUGIN_STANDARD,                           /* type           */
-	PLUGIN_TYPE,                                      /* ui_requirement */
-	0,                                                /* flags          */
-	NULL,                                             /* dependencies   */
-	PURPLE_PRIORITY_DEFAULT,                          /* priority       */
-	"otr",                                            /* id             */
-	NULL,                                             /* name           */
-	PIDGIN_OTR_VERSION,                               /* version        */
-	NULL,                                             /* summary        */
-	NULL,                                             /* description    */
-							  /* author         */
-	"Ian Goldberg, Rob Smits,\n"
-	    "\t\t\tChris Alexander, Willy Lew, Lisa Du,\n"
-	    "\t\t\tNikita Borisov <otr@cypherpunks.ca>",
-	"https://otr.cypherpunks.ca/",                    /* homepage       */
-
-	otr_plugin_load,                                  /* load           */
-	otr_plugin_unload,                                /* unload         */
-	NULL,                                             /* destroy        */
-
-	UI_INFO,                                          /* ui_info        */
-	NULL,                                             /* extra_info     */
-	PREFS_INFO,                                       /* prefs_info     */
-	NULL                                              /* actions        */
-};
+static PurplePluginInfo info = {};
+//{
+//	PURPLE_PLUGIN_MAGIC,
+//
+//	/* Use the correct API */
+//	PURPLE_MAJOR_VERSION,                             /* major version  */
+//	0,                                                /* minor version  */
+//
+//	PURPLE_PLUGIN_STANDARD,                           /* type           */
+//	PLUGIN_TYPE,                                      /* ui_requirement */
+//	0,                                                /* flags          */
+//	NULL,                                             /* dependencies   */
+////	PURPLE_PRIORITY_DEFAULT,                          /* priority       */
+//	"otr",                                            /* id             */
+//	NULL,                                             /* name           */
+//	PIDGIN_OTR_VERSION,                               /* version        */
+//	NULL,                                             /* summary        */
+//	NULL,                                             /* description    */
+//							  /* author         */
+//	"Ian Goldberg, Rob Smits,\n"
+//	    "\t\t\tChris Alexander, Willy Lew, Lisa Du,\n"
+//	    "\t\t\tNikita Borisov <otr@cypherpunks.ca>",
+//	"https://otr.cypherpunks.ca/",                    /* homepage       */
+//
+//	otr_plugin_load,                                  /* load           */
+//	otr_plugin_unload,                                /* unload         */
+//	NULL,                                             /* destroy        */
+//
+//	UI_INFO,                                          /* ui_info        */
+//	NULL,                                             /* extra_info     */
+//	PREFS_INFO,                                       /* prefs_info     */
+//	NULL                                              /* actions        */
+//};
 
 static void
-__init_plugin(PurplePlugin *plugin)
+plugin_load(PurplePlugin *plugin, GError **error)
 {
     /* Set up the UI ops */
 #if PURPLE_VERSION_CHECK(3,0,0)
@@ -1774,13 +1779,32 @@ __init_plugin(PurplePlugin *plugin)
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
 #endif
 
-    info.name        = _("Off-the-Record Messaging");
-    info.summary     = _("Provides private and secure conversations");
-    info.description = _("Preserves the privacy of IM communications "
-			 "by providing encryption, authentication, "
-			 "deniability, and perfect forward secrecy.");
+//    info.name        = _("Off-the-Record Messaging");
+//    info.summary     = _("Provides private and secure conversations");
+//    info.description = _("Preserves the privacy of IM communications "
+//			 "by providing encryption, authentication, "
+//			 "deniability, and perfect forward secrecy.");
 }
 
-PURPLE_INIT_PLUGIN(otr, __init_plugin, info)
+static PurplePluginInfo *
+plugin_query(GError **error)
+{
+    const gchar * const authors[] = { "Ian Goldberg, Rob Smits", "Chris Alexander, Willy Lew, Lisa Du", "Nikita Borisov <otr@cypherpunks.ca>", NULL };
+
+    return purple_plugin_info_new(
+	    "id", "otr",
+	    "name", "Off-the-Record Messaging",
+	    NULL
+    );
+}
+
+static gboolean
+plugin_unload(PurplePlugin *plugin, GError ** error)
+{
+    return TRUE;
+}
+
+
+PURPLE_INIT_PLUGIN(otr, plugin_query, plugin_load, plugin_unload);
 
 /* vim: set tabstop=8 softtabstop=4 shiftwidth=4 noexpandtab: */

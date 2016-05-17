@@ -112,7 +112,8 @@ void otrg_ui_connect_connection(ConnContext *context)
 	PurplePlugin *p = purple_find_prpl(context->protocol);
 	msg = g_strdup_printf(_("Account %s (%s) could not be found"),
 		context->accountname,
-		(p && p->info->name) ? p->info->name : _("Unknown"));
+		"FixMe!");
+// TODO		(p && p->info->name) ? p->info->name : _("Unknown"));
 	otrg_dialog_notify_error(context->accountname, context->protocol,
 		context->username, _("Account not found"), msg, NULL);
 	g_free(msg);

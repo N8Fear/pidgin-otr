@@ -2,6 +2,8 @@ dnl Process this file with autoconf to produce configure.
 
 AC_INIT(pidgin-otr, 4.0.2)
 
+AC_CONFIG_MACRO_DIRS([m4])
+
 AM_CONFIG_HEADER(config.h)
 
 # Silent compilation so warnings can be spotted.
